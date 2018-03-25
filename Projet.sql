@@ -1,4 +1,19 @@
 DROP TABLE People;
+DROP TABLE Biography;
+DROP TABLE Clips;
+DROP TABLE PlaysIn;
+DROP TABLE Directs;
+DROP TABLE Produces;
+DROP TABLE Writes;
+DROP TABLE Linked;
+DROP TABLE Languages;
+DROP TABLE HasLang;
+DROP TABLE Genres;
+DROP TABLE HasGenre;
+DROP TABLE Countries;
+DROP TABLE Associated;
+DROP TABLE Released;
+
 CREATE TABLE People (
   realname VARCHAR2(100),
   nickname VARCHAR2(100),
@@ -17,11 +32,10 @@ CREATE TABLE People (
   PRIMARY KEY (artistname)
 );
   
-DROP TABLE Biography;
 CREATE TABLE Biography(
   biography CLOB,
-  biographer CHAR(100),
-  artistname CHAR(100),
+  biographer VARCHAR2(100),
+  artistname VARCHAR2(100),
   PRIMARY KEY (artistname),
   FOREIGN KEY (artistname) REFERENCES People 
     ON DELETE CASCADE
@@ -37,7 +51,6 @@ CREATE TABLE Clips(
   PRIMARY KEY (clipid)
 );
 
-DROP TABLE PlaysIn;
 CREATE TABLE PlaysIn (
   artistname VARCHAR2(100),
   clipid INTEGER,
@@ -49,7 +62,6 @@ CREATE TABLE PlaysIn (
   FOREIGN KEY (artistname) REFERENCES People
 );
 
-DROP TABLE Directs;
 CREATE TABLE Directs (
   artistname VARCHAR2(100),
   clipid INTEGER,
@@ -60,7 +72,6 @@ CREATE TABLE Directs (
   FOREIGN KEY (artistname) REFERENCES People
 );
 
-DROP TABLE Produces;
 CREATE TABLE Produces (
   artistname VARCHAR2(100),
   clipid INTEGER,
@@ -71,7 +82,6 @@ CREATE TABLE Produces (
   FOREIGN KEY (artistname) REFERENCES People
 );
 
-DROP TABLE Writes;
 CREATE TABLE Writes (
   artistname VARCHAR2(100),
   clipid INTEGER,
@@ -83,7 +93,6 @@ CREATE TABLE Writes (
   FOREIGN KEY (artistname) REFERENCES People
 );
 
-DROP TABLE Linked;
 CREATE TABLE Linked(
   clipto INTEGER,
   clipfrom INTEGER,
@@ -93,14 +102,12 @@ CREATE TABLE Linked(
   FOREIGN KEY (clipfrom) REFERENCES Clips
 );
 
-DROP TABLE Languages;
 CREATE TABLE Languages(
   langid INTEGER,
   language VARCHAR2(50),
   PRIMARY KEY (langid)
 );
 
-DROP TABLE HasLang;
 CREATE TABLE HasLang(
   clipid INTEGER,
   langid INTEGER,
@@ -109,14 +116,12 @@ CREATE TABLE HasLang(
   FOREIGN KEY (langid) REFERENCES Languages
 );
 
-DROP TABLE Genres;
 CREATE TABLE Genres(
   genreid INTEGER,
   genre VARCHAR2(20),
   PRIMARY KEY (genreid)
 );
 
-DROP TABLE HasGenre;
 CREATE TABLE HasGenre(
   clipid INTEGER,
   genreid INTEGER,
@@ -125,14 +130,12 @@ CREATE TABLE HasGenre(
   FOREIGN KEY (genreid) REFERENCES Genres
 );
 
-DROP TABLE Countries;
 CREATE TABLE Countries(
   countryid INTEGER,
   country VARCHAR2(50),
   PRIMARY KEY (countryid)
 );
 
-DROP TABLE Associated;
 CREATE TABLE Associated (
   clipid INTEGER,
   countryid INTEGER,
@@ -141,7 +144,6 @@ CREATE TABLE Associated (
   FOREIGN KEY (countryid) REFERENCES Countries
 );
 
-DROP TABLE Released;
 CREATE TABLE Released (
   clipid INTEGER,
   countryid INTEGER,
