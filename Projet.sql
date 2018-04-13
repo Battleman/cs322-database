@@ -1,4 +1,3 @@
-DROP TABLE People;
 DROP TABLE Biography;
 DROP TABLE Clips;
 DROP TABLE PlaysIn;
@@ -13,6 +12,7 @@ DROP TABLE HasGenre;
 DROP TABLE Countries;
 DROP TABLE Associated;
 DROP TABLE Released;
+DROP TABLE People;
 
 CREATE TABLE People (
   realname VARCHAR2(100),
@@ -45,7 +45,7 @@ CREATE TABLE Biography(
 CREATE TABLE Clips(
   clipid INTEGER,
   rank FLOAT,
-  cliptitle CHAR(100),
+  cliptitle VARCHAR2(300),
   votes INTEGER,
   clipyear INTEGER,
   cliptype CHAR(2),
