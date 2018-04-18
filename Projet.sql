@@ -164,11 +164,17 @@ CREATE TABLE Associated (
 CREATE TABLE Released (
   clipid INTEGER,
   countryid INTEGER,
-  releasedate VARCHAR2(20),
-  runningtime INTEGER,
+  releasedate DATE,
   PRIMARY KEY (clipid, countryid),
   FOREIGN KEY (clipid)
     REFERENCES Clips,
   FOREIGN KEY (countryid)
     REFERENCES Countries
+);
+
+CREATE TABLE Running (
+  clipid INTEGER,
+  countryid INTEGER,
+  running INTEGER,
+  PRIMARY KEY (clipid, countryid,running)
 );
