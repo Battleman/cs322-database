@@ -1,51 +1,53 @@
+DROP TABLE Released;
+DROP TABLE Running;
+DROP TABLE Associated;
 DROP TABLE Biography;
-DROP TABLE Clips;
 DROP TABLE PlaysIn;
 DROP TABLE Directs;
 DROP TABLE Produces;
 DROP TABLE Writes;
 DROP TABLE Linked;
-DROP TABLE Languages;
 DROP TABLE HasLang;
-DROP TABLE Genres;
 DROP TABLE HasGenre;
+DROP TABLE Genres;
 DROP TABLE Countries;
-DROP TABLE Associated;
-DROP TABLE Released;
+DROP TABLE Clips;
+DROP TABLE Languages;
 DROP TABLE People;
 
 CREATE TABLE People (
-  realname VARCHAR2(100),
-  nickname VARCHAR2(100),
-  artistname VARCHAR2(100),
-  trademark VARCHAR2(100),
-  birth VARCHAR2(100),
-  death VARCHAR2(100),
+  personid INTEGER UNIQUE NOT NULL,
+  realname VARCHAR(100),
+  nickname VARCHAR(100),
+  artistname VARCHAR(100),
+  trademark VARCHAR(100),
+  birth VARCHAR(100),
+  death VARCHAR(100),
   salary INTEGER,
-  whereAreTheyNow VARCHAR2(100),
-  height VARCHAR2(50),
-  spouse VARCHAR2(100),
-  biographicalBooks VARCHAR2(1000),
-  trivia VARCHAR2(500),
-  addInfo VARCHAR2(500),
-  personalQuote VARCHAR2(500),
-  PRIMARY KEY (artistname)
+  whereAreTheyNow VARCHAR(100),
+  height VARCHAR(50),
+  spouse VARCHAR(100),
+  biographicalBooks VARCHAR(1000),
+  trivia VARCHAR(500),
+  addInfo VARCHAR(500),
+  personalQuote VARCHAR(500),
+  PRIMARY KEY (personid)
 );
   
 CREATE TABLE Biography(
-  biography CLOB,
-  biographer VARCHAR2(100),
-  artistname VARCHAR2(100),
-  PRIMARY KEY (artistname),
-  FOREIGN KEY (artistname)
-    REFERENCES People 
+  personid INTEGER UNIQUE NOT NULL,
+  biography MEDIUMTEXT,
+  biographer VARCHAR(100),
+  PRIMARY KEY (personid),
+  FOREIGN KEY (personid)
+    REFERENCES People (personid) 
     ON DELETE CASCADE
 );
 
 CREATE TABLE Clips(
-  clipid INTEGER,
+  clipid INTEGER UNIQUE NOT NULL,
   rank FLOAT,
-  cliptitle VARCHAR2(300),
+  cliptitle VARCHAR(300),
   votes INTEGER,
   clipyear INTEGER,
   cliptype CHAR(2),
@@ -53,123 +55,123 @@ CREATE TABLE Clips(
 );
 
 CREATE TABLE PlaysIn (
-  artistname VARCHAR2(100),
+  personid INTEGER NOT NULL,
   clipid INTEGER,
-  addinfo VARCHAR2(1000),
-  chars VARCHAR2(200),
+  addinfo VARCHAR(1000),
+  chars VARCHAR(200),
   orderscredits INTEGER,
-  PRIMARY KEY (artistname, clipid),
+  PRIMARY KEY (personid, clipid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
-  FOREIGN KEY (artistname)
-    REFERENCES People
+    REFERENCES Clips (clipid),
+  FOREIGN KEY (personid)
+    REFERENCES People (personid)
 );
 
 CREATE TABLE Directs (
-  artistname VARCHAR2(100),
+  personid INTEGER NOT NULL,
   clipid INTEGER,
-  addinfo VARCHAR2(1000),
-  roles VARCHAR2(200),
-  PRIMARY KEY (artistname, clipid),
+  addinfo VARCHAR(1000),
+  roles VARCHAR(200),
+  PRIMARY KEY (personid, clipid),
   FOREIGN KEY (clipid) 
-    REFERENCES Clips,
-  FOREIGN KEY (artistname)
-    REFERENCES People
+    REFERENCES Clips (clipid),
+  FOREIGN KEY (personid)
+    REFERENCES People (personid)
 );
 
 CREATE TABLE Produces (
-  artistname VARCHAR2(100),
+  personid INTEGER NOT NULL,
   clipid INTEGER,
-  addinfo VARCHAR2(1000),
-  roles VARCHAR2(200),
-  PRIMARY KEY (artistname, clipid),
+  addinfo VARCHAR(1000),
+  roles VARCHAR(200),
+  PRIMARY KEY (personid, clipid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
-  FOREIGN KEY (artistname)
-    REFERENCES People
+    REFERENCES Clips (clipid),
+  FOREIGN KEY (personid)
+    REFERENCES People (personid)
 );
 
 CREATE TABLE Writes (
-  artistname VARCHAR2(100),
+  personid INTEGER NOT NULL,
   clipid INTEGER,
-  addinfo VARCHAR2(1000),
-  roles VARCHAR2(200),
-  worktype VARCHAR2(100),
-  PRIMARY KEY (artistname, clipid),
+  addinfo VARCHAR(1000),
+  roles VARCHAR(200),
+  worktype VARCHAR(100),
+  PRIMARY KEY (personid, clipid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
-  FOREIGN KEY (artistname)
-    REFERENCES People
+    REFERENCES Clips (clipid),
+  FOREIGN KEY (personid)
+    REFERENCES People (personid)
 );
 
 CREATE TABLE Linked(
   clipto INTEGER,
   clipfrom INTEGER,
-  linktype VARCHAR2(50),
+  linktype VARCHAR(50),
   PRIMARY KEY (clipto,clipfrom,linktype),
   FOREIGN KEY (clipto)
-    REFERENCES Clips,
+    REFERENCES Clips (clipid),
   FOREIGN KEY (clipfrom)
-    REFERENCES Clips
+    REFERENCES Clips (clipid)
 );
 
 CREATE TABLE Languages(
   langid INTEGER,
-  language VARCHAR2(50),
+  language VARCHAR(50),
   PRIMARY KEY (langid)
 );
 
 CREATE TABLE HasLang(
-  clipid INTEGER,
-  langid INTEGER,
+  clipid INTEGER NOT NULL,
+  langid INTEGER NOT NULL,
   PRIMARY KEY (clipid, langid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
+    REFERENCES Clips (clipid),
   FOREIGN KEY (langid)
-    REFERENCES Languages
+    REFERENCES Languages (langid)
 );
 
 CREATE TABLE Genres(
-  genreid INTEGER,
-  genre VARCHAR2(20),
+  genreid INTEGER UNIQUE NOT NULL,
+  genre VARCHAR(20),
   PRIMARY KEY (genreid)
 );
 
 CREATE TABLE HasGenre(
-  clipid INTEGER,
+  clipid INTEGER UNIQUE NOT NULL,
   genreid INTEGER,
   PRIMARY KEY (clipid, genreid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
+    REFERENCES Clips (clipid),
   FOREIGN KEY (genreid)
-    REFERENCES Genres
+    REFERENCES Genres (genreid)
 );
 
 CREATE TABLE Countries(
-  countryid INTEGER,
-  country VARCHAR2(50),
+  countryid INTEGER UNIQUE NOT NULL,
+  country VARCHAR(50),
   PRIMARY KEY (countryid)
 );
 
 CREATE TABLE Associated (
-  clipid INTEGER,
-  countryid INTEGER,
+  clipid INTEGER NOT NULL,
+  countryid INTEGER NOT NULL,
   PRIMARY KEY (clipid, countryid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
+    REFERENCES Clips (clipid),
   FOREIGN KEY (countryid)
-    REFERENCES Countries
+    REFERENCES Countries (countryid)
 );
 
 CREATE TABLE Released (
-  clipid INTEGER,
+  clipid INTEGER NOT NULL,
   countryid INTEGER,
   releasedate DATE,
   PRIMARY KEY (clipid, countryid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips,
+    REFERENCES Clips (clipid),
   FOREIGN KEY (countryid)
-    REFERENCES Countries
+    REFERENCES Countries (countryid)
 );
 
 CREATE TABLE Running (
