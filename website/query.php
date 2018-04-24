@@ -1,51 +1,39 @@
+<head>
+    <meta charset="utf-8">
+    <title>DB 2018 - Query results</title>
+</head>
 <?php
-$db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = diassrv2.epfl.ch)(PORT = 1521)))(CONNECT_DATA=(SID=orcldias)))" ;
-
-if($c = OCILogon("DB_2018_G04", "DB_2018_G04", $db))
-{
-    echo "Successfully connected to Oracle.\n";
-    OCILogoff($c);
-}
-else
-{
-    $err = OCIError();
-    echo "Connection failed." . $err[text];
-}
-
 ?>
-
+<html>
 
 <?php
+$servername = "localhost";
+$username = "olivier";
+$password = "olivier";
+$dbname = "db2018";
 
-//create table users (userid varchar2(10), password varchar2(20), constraint pk_users primary key (userid));
-//insert into users values('kharis', 'pass123');
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+$sql_country = 'SELECT * FROM Countries WHERE country = ' . $_POST['input_country'] . ';';
+// $sql_clips = 'SELECT * FROM Clips;';
+// $sql_people = 'SELECT * FROM People;';
+echo $sql_country . '<br>';
 
-// $nis = isset($_POST['nis']) == true ? $_POST['nis'] : '';
-// $password= isset($_POST['password']) == true ? $_POST['password'] : '';
-
-
-
-// if(empty($nis) or empty($password)){
-//     echo "UserID or Password empty";}
-// else
-// {
-    $db = "(DESCRIPTION =
-        (ADDRESS = (PROTOCOL = TCP)(HOST = diassrv2.epfl.ch)(PORT = 1521))
-        (CONNECT_DATA =
-          (SERVER = DEDICATED)
-          (SERVICE_NAME = XE)
-        )
-      )" ;
-    $connect = oci_connect("HR", "hr", "XE");
-    $query = "SELECT * from 'Genres'";
-    $result = oci_parse($connect, $query);
-    oci_execute($result);
-    $tmpcount = oci_fetch($result);
-    if ($tmpcount==1) {
-        echo "Login Success";}
-    else
-    {
-        echo "Login Failed";
+$result = $conn->query($sql_country);
+echo "Result has type" . gettype($result);
+if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        // echo "Name: " . $row["name"]. " - Email: " . $row["email"]. "<br>";
+        echo "ID {$row['countryid']} corresponds to country {$row['country']} <br>";
     }
-// }
-?>
+} else {
+    echo "0 results";
+}
+$conn->close();
+?> 
+</html>

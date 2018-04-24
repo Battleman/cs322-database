@@ -1,0 +1,64 @@
+<!DOCTYPE <!DOCTYPE html>
+<html lang=en-GB>
+
+<head>
+    <meta charset="utf-8" />
+    <title>DB 2018 - Groupe 4</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="index.css">
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>IMDB Evolved - The new interface</h1>
+
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Welcome')" id="defaultOpen">Welcome</button>
+            <button class="tablinks" onclick="openTab(event, 'Search')">Search</button>
+            <button class="tablinks" onclick="openTab(event, 'Predefined')">Predefined</button>
+            <button class="tablinks" onclick="openTab(event, 'I/D')">Insert/Delete</button>
+            <button class="tablinks" onclick="openTab(event, 'Help')">HELP !</button>
+            <button class="tablinks" onclick="openTab(event, 'Credits')">Credits</button>
+        </div>
+
+        <div id="Welcome" class="tabcontent">
+            <h3>Welcome in this wonderful interface !</h3>
+        </div>
+        <div id="Search" class="tabcontent">
+            <form action="query.php" method="POST">
+                <fieldset>
+                    <legend>Your first query</legend>
+                    Search the whole database:
+                    <input type="text" name="input_country">
+                    <br>
+                    <input type="submit" value="Submit">
+                    <input type="reset">
+                </fieldset>
+            </form>
+        </div>
+        <div id="Predefined" , class="tabcontent">
+            <h3>Predefined queries</h3>
+        </div>
+        <div id="I/D", class="tabcontent">
+            <h3>You can't insert something in the database, this is forbidden</h3>
+        </div>
+    </div>
+    <script>
+        //open the welcome tab
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+
+</html>

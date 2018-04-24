@@ -2,6 +2,8 @@ import numpy as np
 import csv
 import codecs
 import unicodecsv as unicsv
+import time
+from dateutil import parser
 
 def clips():
     with open('db2018imdb/clips.csv', newline='', encoding='utf-8') as clipsCSV,\
@@ -62,10 +64,7 @@ def lang():
                 uniqTuple.add((cid,lang))
         
         for lang, id in allLang.items():
-            destinationLang.writerow([id,lang])
-    
-            
-
+            destinationLang.writerow([id,lang])         
 def genres():
     """Table 'genres' and 'hasGenre'"""
     with open('db2018imdb/genres.csv', mode='r') as genresCSV,\
@@ -96,7 +95,6 @@ def genres():
 
         for g, id in allGenres.items():
             destinationGenre.writerow([id,g])
-
 def countries():
     """Tables 'Countries', 'associated' and 'Released'"""
 
@@ -105,7 +103,8 @@ def countries():
          open('db2018imdb/running_times.csv', mode='r') as runningCSV,\
          open('db2018imdb/ORACLE_associated.csv', mode='wb') as dstAssociated,\
          open('db2018imdb/ORACLE_released.csv', mode='wb') as dstReleased,\
-         open('db2018imdb/ORACLE_countries.csv', mode='wb') as dstCountries:
+         open('db2018imdb/ORACLE_countries.csv', mode='wb') as dstCountries,\
+         open('db2018imdb/ORACLE_running.csv', mode='wb') as dstRunning:
         
         #skip title line
         next(countriesCSV)
@@ -117,11 +116,14 @@ def countries():
         running = csv.reader(runningCSV, delimiter=',',quotechar='"')
         releases = csv.reader(releaseCSV, delimiter=',',quotechar='"')
         destinationAssociated = unicsv.writer(dstAssociated, delimiter=",", quotechar='"')
-        destinationReleased = csv.writer(dstReleased, delimiter=",", quotechar='"')
+        destinationReleased = unicsv.writer(dstReleased, delimiter=",", quotechar='"')
         destinationCountries = unicsv.writer(dstCountries, delimiter=",", quotechar='"')
+        destinationRunning = unicsv.writer(dstRunning, delimiter=",", quotechar='"')
 
+        destinationRunning.writerow(['clipid','countryid','running'])
         destinationCountries.writerow(['country','countryid'])
         destinationAssociated.writerow(['clipid','countryid'])
+        destinationReleased.writerow(['clipid','countryid','releasedate'])
 
         uniqTuple = set()
         allCountries = dict()
@@ -134,8 +136,46 @@ def countries():
             if not (cid, c) in uniqTuple:
                 destinationAssociated.writerow([cid, allCountries[c]])
                 uniqTuple.add((cid,c))
-                
+        
+        for clipId, country, releaseDate in releases:
+            parsed = parser.parse(releaseDate)
+            try:
+                destinationReleased.writerow([clipId, allCountries[country], parsed])
+            except KeyError:
+                print("This country was not found:",country)
+                allCountries[country] = UID
+                destinationCountries.writerow([country, UID])
+                UID += 1
+                destinationReleased.writerow([clipId, allCountries[country], parsed])
+        
+        
+        uniqRuning = set()
+        try:
+            for clipid, releaseCountry, rtime in running:
+                if (clipid, releaseCountry, rtime) in uniqRuning:
+                    continue
+                if(rtime == ""):
+                    rtime = -1
+                if releaseCountry == '':
+                    releaseCountry = 'Worldwide'
+                try:
+                    rtime = float(rtime)
+                except ValueError:
+                    print("Film {} has strange running time: {}".format(clipid, rtime))
+                    continue
 
+                try:
+                    cid = allCountries[releaseCountry]
+                except KeyError:
+                    print("This country was not found:",releaseCountry)
+                    allCountries[releaseCountry] = UID
+                    destinationCountries.writerow([releaseCountry, UID])
+                    UID += 1
+
+                uniqRuning.add((clipid, releaseCountry, rtime))
+                destinationRunning.writerow([clipid, allCountries[releaseCountry], rtime])
+        except ValueError:
+            print("Error at film", clipid)
 def links():
     """Table 'linked'"""
     
@@ -155,5 +195,6 @@ def main():
     # clips()
     # links()
     countries()
+
 if __name__ == "__main__":
     main()
