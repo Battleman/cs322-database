@@ -18,7 +18,7 @@ DROP TABLE People;
 
 CREATE TABLE People (
   personid INTEGER UNIQUE NOT NULL,
-  fullname VARCHAR(100),
+  fullname VARCHAR(100) UNIQUE,
   PRIMARY KEY (personid)
 );
 
@@ -125,7 +125,8 @@ CREATE TABLE Linked(
 CREATE TABLE Languages(
   langid INTEGER,
   language VARCHAR(50),
-  PRIMARY KEY (langid)
+  PRIMARY KEY (langid),
+  UNIQUE (language)
 );
 
 CREATE TABLE HasLang(
@@ -141,7 +142,8 @@ CREATE TABLE HasLang(
 CREATE TABLE Genres(
   genreid INTEGER UNIQUE NOT NULL,
   genre VARCHAR(20),
-  PRIMARY KEY (genreid)
+  PRIMARY KEY (genreid),
+  UNIQUE (genre)
 );
 
 CREATE TABLE HasGenre(
@@ -157,7 +159,8 @@ CREATE TABLE HasGenre(
 CREATE TABLE Countries(
   countryid INTEGER UNIQUE NOT NULL,
   country VARCHAR(50),
-  PRIMARY KEY (countryid)
+  PRIMARY KEY (countryid),
+  UNIQUE (country)
 );
 
 CREATE TABLE Associated (
