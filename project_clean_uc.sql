@@ -18,7 +18,7 @@ DROP TABLE People;
 
 CREATE TABLE People (
   personid INTEGER UNIQUE NOT NULL,
-  fullname VARCHAR2(100),
+  fullname VARCHAR(100) UNIQUE,
   PRIMARY KEY (personid)
 );
 
