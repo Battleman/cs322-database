@@ -35,7 +35,6 @@ CREATE TABLE Bioinfos (
   spouse VARCHAR(100),
   biographicalBooks VARCHAR(1000),
   trivia VARCHAR(500),
-  addInfo VARCHAR(500),
   personalQuote VARCHAR(500),
   PRIMARY KEY (personid),
   FOREIGN KEY (personid) REFERENCES People (personid)
