@@ -1,4 +1,4 @@
-<!DOCTYPE <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang=en-GB>
 
 <head>
@@ -60,13 +60,31 @@
             <div>
                 <div id="insertClip" class="vert_tabcontent">
                     <form action="insert.php" method="POST">
-                        Film title:
+                        Title:
                         <br>
                         <input type="text" name="input_insertClipTitle">
-                        <br> Film year:
+                        <br> Year:
                         <br>
                         <input type="text" name="input_insertClipYear">
                         <br>
+                        <!--Select the genre-->
+                        Genre:
+                        <ul class="checkbox-grid">
+                            <li>
+                                <input type="checkbox" name="genre[]" value="horror">Horror</input>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="genre[]" value="romantic">Romantic</input>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="genre[]" value="sad">Sad</input>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="genre[]" value="thriller">Thriller</input>
+                            </li>
+                            <?php
+                            ?>
+                        </ul>
                         <input type="submit" value="Insert" name='insert'>
                         <input type="submit" value="Delete" name='delete'>
                     </form>
@@ -85,17 +103,17 @@
                     </form>
                 </div>
                 <div id="insertBiography" class="vert_tabcontent">
-                        <form action="insert.php" method="POST">
-                            Person Name:
-                            <br>
-                            <input type="text" name="input_insertPersonNameBio">
-                            <br> Biography:
-                            <br>
-                            <input type="text" name="input_Biography">
-                            <br>
-                            <input type="submit" value="Insert" name='insert'>
-                            <input type="submit" value="Delete" name='delete'>
-                        </form>
+                    <form action="insert.php" method="POST">
+                        Person Name:
+                        <br>
+                        <input type="text" name="input_insertPersonNameBio">
+                        <br> Biography:
+                        <br>
+                        <input type="text" name="input_Biography">
+                        <br>
+                        <input type="submit" value="Insert" name='insert'>
+                        <input type="submit" value="Delete" name='delete'>
+                    </form>
                 </div>
             </div>
         </div>

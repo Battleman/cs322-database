@@ -74,3 +74,9 @@
 .vert_tab button.active {
     background-color: #ccc;
 }
+
+.checkbox-grid li{
+    display: block;
+    float: left;
+    width: 25%;
+}
