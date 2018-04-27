@@ -121,7 +121,7 @@ def countries():
         destinationRunning = unicsv.writer(dstRunning, delimiter=",", quotechar='"')
 
         destinationRunning.writerow(['clipid','countryid','running'])
-        destinationCountries.writerow(['country','countryid'])
+        destinationCountries.writerow(['countryid','country'])
         destinationAssociated.writerow(['clipid','countryid'])
         destinationReleased.writerow(['clipid','countryid','releasedate'])
 
@@ -131,7 +131,7 @@ def countries():
         for cid, c in countries:
             if not c in allCountries:
                 allCountries[c] = UID
-                destinationCountries.writerow([c, UID])
+                destinationCountries.writerow([UID, c])
                 UID += 1
             if not (cid, c) in uniqTuple:
                 destinationAssociated.writerow([cid, allCountries[c]])
@@ -190,10 +190,10 @@ def links():
         # print(allLTypes)
 
 def main():
-    # genres()
-    # lang()
-    # clips()
-    # links()
+    genres()
+    lang()
+    clips()
+    links()
     countries()
 
 if __name__ == "__main__":
