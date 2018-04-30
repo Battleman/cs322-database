@@ -6,13 +6,14 @@ import time
 from dateutil import parser
 
 def clips():
+    print('Treating clips')
     with open('db2018imdb/clips.csv', newline='', encoding='utf-8') as clipsCSV,\
          open('db2018imdb/ratings.csv', newline='') as ratingCSV,\
          open('db2018imdb/ORACLE_clips.csv', mode='wb') as dst:
         
         clips = csv.reader(clipsCSV, delimiter=',', quotechar='"')
         ratings = csv.reader(ratingCSV, delimiter=',', quotechar='"')
-        destination = unicsv.writer(dst, delimiter=",", quotechar='"', encoding='utf-8')
+        destination = unicsv.writer(dst, delimiter=",", quotechar='"', encoding='utf-8', lineterminator='\n')
         
         next(clips)
         next(ratings)
@@ -36,6 +37,7 @@ def clips():
                 
             destination.writerow([id, rank, title, vote, year, typ])
 def lang():
+    print('Treating lang')
     """Table 'languages' and 'hasLang'"""
     with open('db2018imdb/languages.csv', mode='r') as languagesCSV,\
         open('db2018imdb/ORACLE_languages.csv', mode='w') as dstLang,\
@@ -43,8 +45,8 @@ def lang():
         next(languagesCSV)
 
         languages = csv.reader(languagesCSV, delimiter=',',quotechar='"')
-        destinationLang = csv.writer(dstLang, delimiter=",", quotechar='"')
-        destinationHasLang = csv.writer(dstHasLang, delimiter=",", quotechar='"')
+        destinationLang = csv.writer(dstLang, delimiter=",", quotechar='"', lineterminator='\n')
+        destinationHasLang = csv.writer(dstHasLang, delimiter=",", quotechar='"', lineterminator='\n')
 
 
         destinationLang.writerow(['langid','language'])
@@ -66,6 +68,7 @@ def lang():
         for lang, id in allLang.items():
             destinationLang.writerow([id,lang])         
 def genres():
+    print('Treating genres')
     """Table 'genres' and 'hasGenre'"""
     with open('db2018imdb/genres.csv', mode='r') as genresCSV,\
          open('db2018imdb/ORACLE_genres.csv', mode='w') as dstGenre,\
@@ -73,8 +76,8 @@ def genres():
         next(genresCSV)
         
         genres = csv.reader(genresCSV, delimiter=',',quotechar='"')
-        destinationGenre = csv.writer(dstGenre, delimiter=",", quotechar='"')
-        destinationHasGenre = csv.writer(dstHasGenre, delimiter=",", quotechar='"')
+        destinationGenre = csv.writer(dstGenre, delimiter=",", quotechar='"', lineterminator='\n')
+        destinationHasGenre = csv.writer(dstHasGenre, delimiter=",", quotechar='"', lineterminator='\n')
         
         destinationGenre.writerow(['genreid', 'genre'])
         destinationHasGenre.writerow(['clipid','genreid'])
@@ -96,6 +99,7 @@ def genres():
         for g, id in allGenres.items():
             destinationGenre.writerow([id,g])
 def countries():
+    print('Treating countries')
     """Tables 'Countries', 'associated' and 'Released'"""
 
     with open('db2018imdb/countries.csv', mode='r') as countriesCSV,\
@@ -115,10 +119,10 @@ def countries():
         countries = csv.reader(countriesCSV, delimiter=',',quotechar='"')
         running = csv.reader(runningCSV, delimiter=',',quotechar='"')
         releases = csv.reader(releaseCSV, delimiter=',',quotechar='"')
-        destinationAssociated = unicsv.writer(dstAssociated, delimiter=",", quotechar='"')
-        destinationReleased = unicsv.writer(dstReleased, delimiter=",", quotechar='"')
-        destinationCountries = unicsv.writer(dstCountries, delimiter=",", quotechar='"')
-        destinationRunning = unicsv.writer(dstRunning, delimiter=",", quotechar='"')
+        destinationAssociated = unicsv.writer(dstAssociated, delimiter=",", quotechar='"', lineterminator='\n')
+        destinationReleased = unicsv.writer(dstReleased, delimiter=",", quotechar='"', lineterminator='\n')
+        destinationCountries = unicsv.writer(dstCountries, delimiter=",", quotechar='"', lineterminator='\n')
+        destinationRunning = unicsv.writer(dstRunning, delimiter=",", quotechar='"', lineterminator='\n')
 
         destinationRunning.writerow(['clipid','countryid','running'])
         destinationCountries.writerow(['countryid','country'])
@@ -144,7 +148,7 @@ def countries():
             except KeyError:
                 print("This country was not found:",country)
                 allCountries[country] = UID
-                destinationCountries.writerow([country, UID])
+                destinationCountries.writerow([UID, country])
                 UID += 1
                 destinationReleased.writerow([clipId, allCountries[country], parsed])
         
@@ -169,7 +173,7 @@ def countries():
                 except KeyError:
                     print("This country was not found:",releaseCountry)
                     allCountries[releaseCountry] = UID
-                    destinationCountries.writerow([releaseCountry, UID])
+                    destinationCountries.writerow([UID, releaseCountry])
                     UID += 1
 
                 uniqRuning.add((clipid, releaseCountry, rtime))
@@ -177,13 +181,14 @@ def countries():
         except ValueError:
             print("Error at film", clipid)
 def links():
+    print('Treating links')
     """Table 'linked'"""
     
-    with open('db2018imdb/clip_links.csv', mode='r') as linksCSV:
-        # ,open('db2018imdb/ORACLE_linked.csv', mode='w') as dstLinked\
+    with open('db2018imdb/clip_links.csv', mode='r') as linksCSV\
+        ,open('db2018imdb/ORACLE_linked.csv', mode='wb') as dstLinked:
 
         links=csv.reader(linksCSV, delimiter=',', quotechar='"')
-        # destinationLinked = csv.writer(dstLinked, delimiter=',', quotechar='"')
+        destinationLinked = csv.writer(dstLinked, delimiter=',', quotechar='"', lineterminator='\n')
         allLTypes = set()
         for lfrom, lto, ltype in links:
             allLTypes.add(ltype)
@@ -192,9 +197,9 @@ def links():
 def main():
     genres()
     lang()
-    clips()
+    # clips()
     links()
-    countries()
+    # countries()
 
 if __name__ == "__main__":
     main()

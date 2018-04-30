@@ -8,13 +8,14 @@ def biographies():
     
     with open('db2018imdb/biographies.csv', newline='', encoding='utf-8') as bioCSV, \
     open('db2018imdb/ORACLE_biographies.csv', mode='wb') as dstbio,\
-    open('db2018imdb/ORACLE_bioinfo.csv', mode='wb') as dstinfo:
+    open('db2018imdb/ORACLE_bioinfos.csv', mode='wb') as dstinfo:
 
         bios = csv.reader(bioCSV, delimiter=',', quotechar='"')
-        bioinfos = unicsv.writer(dstinfo, delimiter=",", quotechar='"', encoding='utf-8')
-        biographies = unicsv.writer(dstbio, delimiter=",", quotechar='"', encoding='utf-8')
-
+        bioinfos = unicsv.writer(dstinfo, delimiter=",", quotechar='"', encoding='utf-8', lineterminator='\n')
+        biographies = unicsv.writer(dstbio, delimiter=",", quotechar='"', encoding='utf-8', lineterminator='\n')
         next(bios)
+        length = {'name':0, 'realName':0, 'nickName':0, 'birth':0, 'height':0, 'bioPhy':0, 'bioPher':0, 'death':0,\
+                'spouse':0, 'trivia':0, 'books':0, 'quotes':0, 'salary':0, 'trademark':0, 'whereNow':0}
         for x in bios:
             try :
                 [name, realName, nickName, birth, height, bioPhy, bioPher, death,\
@@ -25,7 +26,21 @@ def biographies():
                 continue 
             id = namesToId[name]
             # print("Inspecting {}, with id {}".format(name, id))
-
+            length['name'] = max(length['name'], len(name))
+            length['realName'] = max(length['realName'], len(realName))
+            length['nickName'] = max(length['nickName'], len(nickName))
+            length['birth'] = max(length['birth'], len(birth))
+            length['height'] = max(length['height'], len(height))
+            length['bioPhy'] = max(length['bioPhy'], len(bioPhy))
+            length['bioPher'] = max(length['bioPher'], len(bioPher))
+            length['death'] = max(length['death'], len(death))
+            length['spouse'] = max(length['spouse'], len(spouse))
+            length['trivia'] = max(length['trivia'], len(trivia))
+            length['books'] = max(length['books'], len(books))
+            length['quotes'] = max(length['quotes'], len(quotes))
+            length['salary'] = max(length['salary'], len(salary))
+            length['trademark'] = max(length['trademark'], len(trademark))
+            length['whereNow'] = max(length['whereNow'], len(whereNow))
             if bioPhy != "" or bioPher != "":
                 biographies.writerow([id, bioPhy, bioPher])
             
@@ -33,7 +48,7 @@ def biographies():
                 trivia, books, quotes, salary, trademark, whereNow] != [""]*12:
                 bioinfos.writerow([id, realName, nickName, trademark, birth, death,\
                                     salary, whereNow, height, spouse, books, trivia, quotes])
-           
+    print('Max Lengths:', length)
 def addPeople(csvSource, namesSet):
     src = csv.reader(csvSource, delimiter=',', quotechar='"')
     next(src)
@@ -62,7 +77,7 @@ def people():
     nameDict = dict()
     
     with open('db2018imdb/ORACLE_people.csv', mode='wb') as dst:
-        people = unicsv.writer(dst, delimiter=",", quotechar='"', encoding='utf-8')
+        people = unicsv.writer(dst, delimiter=",", quotechar='"', encoding='utf-8', lineterminator='\n')
         for x,y in couple:
             nameDict[y] = x
             people.writerow([x,y])
