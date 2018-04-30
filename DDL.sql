@@ -18,24 +18,24 @@ DROP TABLE People;
 
 CREATE TABLE People (
   personid INTEGER UNIQUE NOT NULL,
-  fullname VARCHAR(100) UNIQUE,
+  fullname VARCHAR(300),
   PRIMARY KEY (personid)
 );
 
 CREATE TABLE Bioinfos (
   personid INTEGER UNIQUE NOT NULL,
-  realname VARCHAR(100),
-  nickname VARCHAR(100),
-  trademark VARCHAR(100),
-  birth VARCHAR(100),
-  death VARCHAR(100),
-  salary INTEGER,
-  whereAreTheyNow VARCHAR(100),
+  realname VARCHAR(300),
+  nickname VARCHAR(400),
+  trademark TEXT,
+  birth VARCHAR(200),
+  death VARCHAR(200),
+  salary TEXT,
+  whereAreTheyNow TEXT,
   height VARCHAR(50),
-  spouse VARCHAR(100),
+  spouse VARCHAR(750),
   biographicalBooks VARCHAR(1000),
-  trivia VARCHAR(500),
-  personalQuote VARCHAR(500),
+  trivia TEXT,
+  personalQuote MEDIUMTEXT,
   PRIMARY KEY (personid),
   FOREIGN KEY (personid) REFERENCES People (personid)
   ON DELETE CASCADE
