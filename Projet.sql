@@ -18,7 +18,7 @@ DROP TABLE People;
 
 CREATE TABLE People (
   personid INTEGER UNIQUE NOT NULL,
-  fullname VARCHAR(100),
+  fullname VARCHAR(100) UNIQUE,
   PRIMARY KEY (personid)
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE Bioinfos (
 CREATE TABLE Biographies(
   personid INTEGER UNIQUE NOT NULL,
   biography MEDIUMTEXT,
-  biographer VARCHAR(100),
+  biographer VARCHAR(200),
   PRIMARY KEY (personid),
   FOREIGN KEY (personid) REFERENCES People (personid) 
     ON DELETE CASCADE
@@ -123,7 +123,7 @@ CREATE TABLE Linked(
 
 CREATE TABLE Languages(
   langid INTEGER,
-  language VARCHAR(50),
+  language VARCHAR(50) UNIQUE,
   PRIMARY KEY (langid)
 );
 
@@ -139,12 +139,12 @@ CREATE TABLE HasLang(
 
 CREATE TABLE Genres(
   genreid INTEGER UNIQUE NOT NULL,
-  genre VARCHAR(20),
+  genre VARCHAR(20) UNIQUE NOT NULL,
   PRIMARY KEY (genreid)
 );
 
 CREATE TABLE HasGenre(
-  clipid INTEGER UNIQUE NOT NULL,
+  clipid INTEGER NOT NULL,
   genreid INTEGER,
   PRIMARY KEY (clipid, genreid),
   FOREIGN KEY (clipid)
@@ -155,7 +155,7 @@ CREATE TABLE HasGenre(
 
 CREATE TABLE Countries(
   countryid INTEGER UNIQUE NOT NULL,
-  country VARCHAR(50),
+  country VARCHAR(50) UNIQUE NOT NULL,
   PRIMARY KEY (countryid)
 );
 
