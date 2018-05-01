@@ -1,2 +1,3 @@
 .vscode*
-db2018imdb/*
+db2018imdb/ORACLE*
+namesDictionnary.pkl
