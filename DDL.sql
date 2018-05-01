@@ -113,12 +113,20 @@ CREATE TABLE Writes (
 CREATE TABLE Linked(
   clipto INTEGER,
   clipfrom INTEGER,
-  linktype VARCHAR(50),
+  linktype INTEGER,
   PRIMARY KEY (clipto,clipfrom,linktype),
   FOREIGN KEY (clipto)
     REFERENCES Clips (clipid),
   FOREIGN KEY (clipfrom)
-    REFERENCES Clips (clipid)
+    REFERENCES Clips (clipid),
+  FOREIGN KEY (linktype)
+    REFERENCES Links(linktype)
+);
+
+CREATE TABLE Links(
+  linktype INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
+  link VARCHAR(50) UNIQUE NOT NULL,
+  PRIMARY KEY (linktype)
 );
 
 CREATE TABLE Languages(

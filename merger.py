@@ -143,16 +143,21 @@ def countries():
                 uniqTuple.add((cid,c))
         
         for clipId, country, releaseDate in releases:
-            parsed = parser.parse(releaseDate)
             try:
-                destinationReleased.writerow([clipId, allCountries[country], parsed])
+                parsed = parser.parse(releaseDate)
+            except ValueError:
+                print("Unparsable date:", releaseDate)
+            
+            try:
+                countryid = allCountries[country]
             except KeyError:
                 print("This country was not found:",country)
                 allCountries[country] = UID
+                countryid = UID
                 destinationCountries.writerow([UID, country])
                 UID += 1
-                destinationReleased.writerow([clipId, allCountries[country], parsed])
-        
+            finally:
+                destinationReleased.writerow([clipId, countryid, parsed])
         
         uniqRuning = set()
         try:
@@ -186,14 +191,23 @@ def links():
     """Table 'linked'"""
     
     with open('db2018imdb/clip_links.csv', mode='r') as linksCSV\
+        ,open('db2018imdb/ORACLE_links.csv', mode='wb') as dstLinks\
         ,open('db2018imdb/ORACLE_linked.csv', mode='wb') as dstLinked:
 
         links=csv.reader(linksCSV, delimiter=',', quotechar='"')
-        destinationLinked = csv.writer(dstLinked, delimiter=',', quotechar='"', lineterminator='\n')
-        allLTypes = set()
+        destinationLinked = unicsv.writer(dstLinked, delimiter=',', quotechar='"', lineterminator='\n')
+        destinationLinks = unicsv.writer(dstLinks, delimiter=',', quotechar='"', lineterminator='\n')
+        allLTypes = dict()
+        UID = 0
         for lfrom, lto, ltype in links:
-            allLTypes.add(ltype)
-        # print(allLTypes)
+            if ltype not in allLTypes:
+                allLTypes[ltype] = UID
+                destinationLinked.writerow([lto, lfrom, UID])
+                destinationLinks.writerow([UID, ltype])
+                UID += 1
+            else:
+                destinationLinked.writerow([lto, lfrom, allLTypes[ltype]])
+        print(allLTypes)
 def biographies():
     print("Treating biographies")
     with open("namesDictionnary.pkl", "rb") as f:
