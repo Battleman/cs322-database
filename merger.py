@@ -168,12 +168,11 @@ def countries():
                     runningTime = -1
                 if releaseCountry == '':
                     releaseCountry = 'Worldwide'
-                try:
-                    runningTime = float(runningTime)
-                except ValueError:
-                    print("Film {} has strange running time: {}".format(clipid, runningTime))
-                    continue
-
+                # try:
+                #     runningTime = float(runningTime)
+                # except ValueError:
+                #     print("Film {} has strange running time: {}".format(clipid, runningTime))
+                #     continue
                 try:
                     cid = allCountries[releaseCountry]
                 except KeyError:
@@ -281,6 +280,7 @@ def people():
         addPeople(wriCSV, uniqNames)
 
     sortedNames = sorted(uniqNames)
+    print("Hobaugh ")
     couple = enumerate(sortedNames, start=1)
     nameDict = dict()
     
