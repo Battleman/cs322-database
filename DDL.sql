@@ -64,7 +64,7 @@ CREATE TABLE PlaysIn (
   personid INTEGER NOT NULL,
   clipid INTEGER,
   addinfo VARCHAR(1000),
-  chars VARCHAR(200),
+  chars VARCHAR(800),
   orderscredits INTEGER,
   PRIMARY KEY (personid, clipid),
   FOREIGN KEY (clipid)
@@ -101,9 +101,9 @@ CREATE TABLE Writes (
   personid INTEGER NOT NULL,
   clipid INTEGER,
   addinfo VARCHAR(1000),
-  roles VARCHAR(200),
+  role VARCHAR(100),
   worktype VARCHAR(100),
-  PRIMARY KEY (personid, clipid),
+  PRIMARY KEY (personid, clipid, role),
   FOREIGN KEY (clipid)
     REFERENCES Clips (clipid),
   FOREIGN KEY (personid)

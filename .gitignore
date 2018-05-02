@@ -1,2 +1,4 @@
 .vscode*
 db2018imdb/ORACLE*
+.*.swp
+db2018imdb/tables*
