@@ -17,7 +17,7 @@ DROP TABLE Languages;
 DROP TABLE People;
 
 CREATE TABLE People (
-  personid INTEGER UNIQUE NOT NULL,
+  personid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
   fullname VARCHAR(300),
   PRIMARY KEY (personid)
 );
@@ -33,7 +33,7 @@ CREATE TABLE Bioinfos (
   whereAreTheyNow TEXT,
   height VARCHAR(50),
   spouse VARCHAR(750),
-  biographicalBooks VARCHAR(1000),
+  biographicalBooks TEXT,
   trivia TEXT,
   personalQuote MEDIUMTEXT,
   PRIMARY KEY (personid),
@@ -51,7 +51,7 @@ CREATE TABLE Biographies(
 );
 
 CREATE TABLE Clips(
-  clipid INTEGER UNIQUE NOT NULL,
+  clipid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
   rank FLOAT,
   cliptitle VARCHAR(300),
   votes INTEGER,
@@ -130,7 +130,7 @@ CREATE TABLE Links(
 );
 
 CREATE TABLE Languages(
-  langid INTEGER,
+  langid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
   language VARCHAR(50) UNIQUE,
   PRIMARY KEY (langid)
 );
@@ -146,7 +146,7 @@ CREATE TABLE HasLang(
 );
 
 CREATE TABLE Genres(
-  genreid INTEGER UNIQUE NOT NULL,
+  genreid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
   genre VARCHAR(20) UNIQUE NOT NULL,
   PRIMARY KEY (genreid)
 );
@@ -162,7 +162,7 @@ CREATE TABLE HasGenre(
 );
 
 CREATE TABLE Countries(
-  countryid INTEGER UNIQUE NOT NULL,
+  countryid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
   country VARCHAR(50) UNIQUE NOT NULL,
   PRIMARY KEY (countryid)
 );
