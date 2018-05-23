@@ -257,11 +257,15 @@ def biographies():
     print('Max Lengths:', length)
 def people():
     print("Treating people")
-    def addPeople(csvSource, namesSet):
+    def addPeople(csvSource, namesSet, debug=False):
         src = csv.reader(csvSource, delimiter=',', quotechar='"')
         next(src)
+        # row=1
         for person in src:
+        #     if debug and row > 52715 and row < 52725:
+                # print(person, person[0], "Central Saint Martin" in person[0])
             namesSet.add(person[0])
+            # row += 1
     uniqNames = set()
 
     with open('db2018imdb/actors.csv', newline='', encoding='utf-8') as actCSV:
@@ -271,16 +275,15 @@ def people():
         addPeople(dirCSV, uniqNames)
 
     with open('db2018imdb/producers.csv', newline='', encoding='utf-8') as proCSV:
-        addPeople(proCSV, uniqNames)
+        addPeople(proCSV, uniqNames, True)
 
     with open('db2018imdb/writers.csv', newline='', encoding='utf-8') as wriCSV:
         addPeople(wriCSV, uniqNames)
 
-    with open('db2018imdb/biographies.csv', newline='', encoding='utf-8') as wriCSV:
-        addPeople(wriCSV, uniqNames)
+    with open('db2018imdb/biographies.csv', newline='', encoding='utf-8') as bioCSV:
+        addPeople(bioCSV, uniqNames)
 
     sortedNames = sorted(uniqNames)
-    print("Hobaugh ")
     couple = enumerate(sortedNames, start=1)
     nameDict = dict()
     
@@ -293,13 +296,16 @@ def people():
     with open("namesDictionnary.pkl", 'wb') as n:
         pkl.dump(nameDict, n, pkl.HIGHEST_PROTOCOL)
 
+    with open("namesDictionnary.pkl", "rb") as n:
+        newdict = pkl.load(n)
+
 def main():
-    genres()
-    lang()
-    clips()
-    links()
-    countries()
+    # genres()
+    # lang()
+    # clips()
+    # links()
+    # countries()
     people()
-    biographies()
+    # biographies()
 if __name__ == "__main__":
     main()

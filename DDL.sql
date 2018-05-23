@@ -1,25 +1,48 @@
-DROP TABLE Released;
-DROP TABLE Running;
-DROP TABLE Associated;
-DROP TABLE Biographies;
-DROP TABLE Bioinfos;
-DROP TABLE PlaysIn;
-DROP TABLE Directs;
-DROP TABLE Produces;
-DROP TABLE Writes;
-DROP TABLE Linked;
-DROP TABLE HasLang;
-DROP TABLE HasGenre;
-DROP TABLE Genres;
-DROP TABLE Countries;
-DROP TABLE Clips;
-DROP TABLE Languages;
-DROP TABLE People;
+DROP TABLE IF EXISTS Released;
+DROP TABLE IF EXISTS Running;
+DROP TABLE IF EXISTS Associated;
+DROP TABLE IF EXISTS Bioinfos;
+DROP TABLE IF EXISTS Biographies;
+DROP TABLE IF EXISTS PlaysIn;
+DROP TABLE IF EXISTS Directs;
+DROP TABLE IF EXISTS Produces;
+DROP TABLE IF EXISTS Writes;
+DROP TABLE IF EXISTS Linked;
+DROP TABLE IF EXISTS Links;
+DROP TABLE IF EXISTS HasLang;
+DROP TABLE IF EXISTS HasGenre;
+DROP TABLE IF EXISTS Genres;
+DROP TABLE IF EXISTS Countries;
+DROP TABLE IF EXISTS Clips;
+DROP TABLE IF EXISTS Languages;
+DROP TABLE IF EXISTS People;
 
 CREATE TABLE People (
   personid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
   fullname VARCHAR(300),
   PRIMARY KEY (personid)
+);
+
+CREATE TABLE Clips(
+  clipid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
+  rank FLOAT,
+  cliptitle VARCHAR(300),
+  votes INTEGER,
+  clipyear INTEGER,
+  cliptype CHAR(2),
+  PRIMARY KEY (clipid)
+);
+
+CREATE TABLE Countries(
+  countryid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
+  country VARCHAR(50) UNIQUE NOT NULL,
+  PRIMARY KEY (countryid)
+);
+
+CREATE TABLE Links(
+  linktype INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
+  link VARCHAR(50) UNIQUE NOT NULL,
+  PRIMARY KEY (linktype)
 );
 
 CREATE TABLE Bioinfos (
@@ -40,6 +63,12 @@ CREATE TABLE Bioinfos (
   FOREIGN KEY (personid) REFERENCES People (personid)
   ON DELETE CASCADE
 );
+
+CREATE TABLE Languages(
+  langid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
+  language VARCHAR(50) UNIQUE,
+  PRIMARY KEY (langid)
+);
   
 CREATE TABLE Biographies(
   personid INTEGER UNIQUE NOT NULL,
@@ -48,16 +77,6 @@ CREATE TABLE Biographies(
   PRIMARY KEY (personid),
   FOREIGN KEY (personid) REFERENCES People (personid) 
     ON DELETE CASCADE
-);
-
-CREATE TABLE Clips(
-  clipid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  rank FLOAT,
-  cliptitle VARCHAR(300),
-  votes INTEGER,
-  clipyear INTEGER,
-  cliptype CHAR(2),
-  PRIMARY KEY (clipid)
 );
 
 CREATE TABLE PlaysIn (
@@ -110,6 +129,8 @@ CREATE TABLE Writes (
     REFERENCES People (personid)
 );
 
+
+
 CREATE TABLE Linked(
   clipto INTEGER,
   clipfrom INTEGER,
@@ -123,17 +144,7 @@ CREATE TABLE Linked(
     REFERENCES Links(linktype)
 );
 
-CREATE TABLE Links(
-  linktype INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  link VARCHAR(50) UNIQUE NOT NULL,
-  PRIMARY KEY (linktype)
-);
 
-CREATE TABLE Languages(
-  langid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  language VARCHAR(50) UNIQUE,
-  PRIMARY KEY (langid)
-);
 
 CREATE TABLE HasLang(
   clipid INTEGER NOT NULL,
@@ -161,12 +172,6 @@ CREATE TABLE HasGenre(
     REFERENCES Genres (genreid)
 );
 
-CREATE TABLE Countries(
-  countryid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  country VARCHAR(50) UNIQUE NOT NULL,
-  PRIMARY KEY (countryid)
-);
-
 CREATE TABLE Associated (
   clipid INTEGER NOT NULL,
   countryid INTEGER NOT NULL,
@@ -188,9 +193,3 @@ CREATE TABLE Released (
     REFERENCES Countries (countryid)
 );
 
-CREATE TABLE Running (
-  clipid INTEGER,
-  countryid INTEGER,
-  running INTEGER,
-  PRIMARY KEY (clipid, countryid,running)
-);
