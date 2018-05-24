@@ -25,11 +25,11 @@ CREATE TABLE People (
 
 CREATE TABLE Clips(
   clipid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  rank FLOAT,
-  cliptitle VARCHAR(300),
-  votes INTEGER,
-  clipyear INTEGER,
-  cliptype CHAR(2),
+  rank FLOAT DEFAULT NULL,
+  cliptitle VARCHAR(300) NOT NULL,
+  votes INTEGER DEFAULT NULL,
+  clipyear INTEGER DEFAULT NULL,
+  cliptype CHAR(2) DEFAULT NULL,
   PRIMARY KEY (clipid)
 );
 

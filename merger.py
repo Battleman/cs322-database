@@ -296,9 +296,6 @@ def people():
     with open("namesDictionnary.pkl", 'wb') as n:
         pkl.dump(nameDict, n, pkl.HIGHEST_PROTOCOL)
 
-    with open("namesDictionnary.pkl", "rb") as n:
-        newdict = pkl.load(n)
-
 def main():
     # genres()
     # lang()
