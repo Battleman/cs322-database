@@ -132,22 +132,24 @@ def countries():
 
         uniqTuple = set()
         allCountries = dict()
-        UID = 0
-        for cid, c in countries:
+        UID = 1
+        print("in file countries.csv")
+        for clipid, c in countries:
             if not c in allCountries:
                 allCountries[c] = UID
                 destinationCountries.writerow([UID, c])
                 UID += 1
-            if not (cid, c) in uniqTuple:
-                destinationAssociated.writerow([cid, allCountries[c]])
-                uniqTuple.add((cid,c))
+            if not (clipid, c) in uniqTuple:
+                destinationAssociated.writerow([clipid, allCountries[c]])
+                uniqTuple.add((clipid,c))
         
+        print("In file release_dates")
         for clipId, country, releaseDate in releases:
             try:
                 parsed = parser.parse(releaseDate)
             except ValueError:
                 print("Unparsable date:", releaseDate)
-            
+
             try:
                 countryid = allCountries[country]
             except KeyError:
@@ -159,6 +161,7 @@ def countries():
             finally:
                 destinationReleased.writerow([clipId, countryid, parsed])
         
+        print("In file running_times")
         uniqRuning = set()
         try:
             for clipid, releaseCountry, runningTime in running:
@@ -192,12 +195,13 @@ def links():
     with open('db2018imdb/clip_links.csv', mode='r') as linksCSV\
         ,open('db2018imdb/ORACLE_links.csv', mode='wb') as dstLinks\
         ,open('db2018imdb/ORACLE_linked.csv', mode='wb') as dstLinked:
-
+        
         links=csv.reader(linksCSV, delimiter=',', quotechar='"')
         destinationLinked = unicsv.writer(dstLinked, delimiter=',', quotechar='"', lineterminator='\n')
         destinationLinks = unicsv.writer(dstLinks, delimiter=',', quotechar='"', lineterminator='\n')
+        next(links)
         allLTypes = dict()
-        UID = 0
+        UID = 1
         for lfrom, lto, ltype in links:
             if ltype not in allLTypes:
                 allLTypes[ltype] = UID
@@ -297,12 +301,12 @@ def people():
         pkl.dump(nameDict, n, pkl.HIGHEST_PROTOCOL)
 
 def main():
-    # genres()
-    # lang()
-    # clips()
-    # links()
-    # countries()
+    genres()
+    lang()
+    clips()
+    links()
+    countries()
     people()
-    # biographies()
+    biographies()
 if __name__ == "__main__":
     main()
