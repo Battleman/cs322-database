@@ -66,7 +66,7 @@ CREATE TABLE Bioinfos (
 
 CREATE TABLE Languages(
   langid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  language VARCHAR(50) UNIQUE,
+  language VARCHAR(50) UNIQUE NOT NULL,
   PRIMARY KEY (langid)
 );
   
