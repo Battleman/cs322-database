@@ -58,7 +58,12 @@ def lang():
         uniqTuple = set()
         UID=1
 
-        for cid, lang in languages:
+        for c in languages:
+            try:
+                cid, lang = c
+            except ValueError:
+                print(c)
+                continue
             if not lang in allLang:
                 allLang[lang] = UID
                 UID += 1
@@ -177,7 +182,7 @@ def countries():
                 #     print("Film {} has strange running time: {}".format(clipid, runningTime))
                 #     continue
                 try:
-                    cid = allCountries[releaseCountry]
+                    allCountries[releaseCountry]
                 except KeyError:
                     print("This country was not found:",releaseCountry)
                     allCountries[releaseCountry] = UID
@@ -301,12 +306,12 @@ def people():
         pkl.dump(nameDict, n, pkl.HIGHEST_PROTOCOL)
 
 def main():
-    genres()
+    # genres()
     lang()
-    clips()
-    links()
-    countries()
-    people()
-    biographies()
+    # clips()
+    # links()
+    # countries()
+    # people()
+    # biographies()
 if __name__ == "__main__":
     main()
