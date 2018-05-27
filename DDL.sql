@@ -66,7 +66,7 @@ CREATE TABLE Bioinfos (
 
 CREATE TABLE Languages(
   langid INTEGER UNIQUE NOT NULL AUTO_INCREMENT,
-  language VARCHAR(50) UNIQUE NOT NULL,
+  language VARCHAR(100) UNIQUE NOT NULL,
   PRIMARY KEY (langid)
 );
   
@@ -145,11 +145,13 @@ CREATE TABLE Linked(
 CREATE TABLE HasLang(
   clipid INTEGER NOT NULL,
   langid INTEGER NOT NULL,
-  /* PRIMARY KEY (clipid, langid), */
+  PRIMARY KEY (clipid, langid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
+    REFERENCES Clips (clipid)
+    ON DELETE CASCADE,
   FOREIGN KEY (langid)
     REFERENCES Languages (langid)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Genres(
