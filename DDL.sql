@@ -129,8 +129,6 @@ CREATE TABLE Writes (
     REFERENCES People (personid)
 );
 
-
-
 CREATE TABLE Linked(
   clipto INTEGER,
   clipfrom INTEGER,
@@ -144,12 +142,10 @@ CREATE TABLE Linked(
     REFERENCES Links(linktype)
 );
 
-
-
 CREATE TABLE HasLang(
   clipid INTEGER NOT NULL,
   langid INTEGER NOT NULL,
-  PRIMARY KEY (clipid, langid),
+  /* PRIMARY KEY (clipid, langid), */
   FOREIGN KEY (clipid)
     REFERENCES Clips (clipid),
   FOREIGN KEY (langid)
@@ -167,9 +163,11 @@ CREATE TABLE HasGenre(
   genreid INTEGER,
   PRIMARY KEY (clipid, genreid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
+    REFERENCES Clips (clipid)
+    ON DELETE CASCADE,
   FOREIGN KEY (genreid)
     REFERENCES Genres (genreid)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Associated (
@@ -177,9 +175,11 @@ CREATE TABLE Associated (
   countryid INTEGER NOT NULL,
   PRIMARY KEY (clipid, countryid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
+    REFERENCES Clips (clipid)
+    ON DELETE CASCADE,
   FOREIGN KEY (countryid)
     REFERENCES Countries (countryid)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Released (
@@ -188,8 +188,9 @@ CREATE TABLE Released (
   releasedate DATE,
   PRIMARY KEY (clipid, countryid),
   FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
+    REFERENCES Clips (clipid)
+    ON DELETE CASCADE,
   FOREIGN KEY (countryid)
     REFERENCES Countries (countryid)
+    ON DELETE CASCADE
 );
-
