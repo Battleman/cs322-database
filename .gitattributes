@@ -1,14 +1,1 @@
-db2018imdb/genres.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/producers.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/writers.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/actors.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/release_dates.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/running_times.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/directors.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/languages.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/clips.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/countries.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/biographies.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/clip_links.csv filter=lfs diff=lfs merge=lfs -text
-db2018imdb/ratings.csv filter=lfs diff=lfs merge=lfs -text
 namesDictionnary.pkl filter=lfs diff=lfs merge=lfs -text

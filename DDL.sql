@@ -7,6 +7,10 @@ DROP TABLE IF EXISTS PlaysIn;
 DROP TABLE IF EXISTS Directs;
 DROP TABLE IF EXISTS Produces;
 DROP TABLE IF EXISTS Writes;
+DROP TABLE IF EXISTS PlaysInRoles;
+DROP TABLE IF EXISTS DirectsRoles;
+DROP TABLE IF EXISTS ProducesRoles;
+DROP TABLE IF EXISTS WritesRoles;
 DROP TABLE IF EXISTS Linked;
 DROP TABLE IF EXISTS Links;
 DROP TABLE IF EXISTS HasLang;
@@ -80,53 +84,73 @@ CREATE TABLE Biographies(
 );
 
 CREATE TABLE PlaysIn (
-  personid INTEGER NOT NULL,
-  clipid INTEGER,
-  addinfo VARCHAR(1000),
-  chars VARCHAR(800),
-  orderscredits INTEGER,
-  PRIMARY KEY (personid, clipid),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
-  FOREIGN KEY (personid)
-    REFERENCES People (personid)
+    personid INTEGER NOT NULL,
+    clipid INTEGER,
+    playsinroleid INTEGER,
+    PRIMARY KEY (personid, clipid, playsinroleid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
+    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (playsinroleid) REFERENCES PlaysInRoles (playsinroleid)
+);
+
+CREATE TABLE PlaysInRoles (
+    playsinroleid INTEGER NOT NULL,
+    chars VARCHAR(250),
+    orderscredit INTEGER,
+    addinfo varchar(1000),
+    PRIMARY KEY (playsinroleid)
 );
 
 CREATE TABLE Directs (
-  personid INTEGER NOT NULL,
-  clipid INTEGER,
-  addinfo VARCHAR(1000),
-  roles VARCHAR(200),
-  PRIMARY KEY (personid, clipid),
-  FOREIGN KEY (clipid) 
-    REFERENCES Clips (clipid),
-  FOREIGN KEY (personid)
-    REFERENCES People (personid)
+    personid INTEGER NOT NULL,
+    clipid INTEGER,
+    directsroleid INTEGER,
+    PRIMARY KEY (personid, clipid, directsroleid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
+    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (directsroleid) REFERENCES DirectsRoles (directsroleid)
+);
+
+CREATE TABLE DirectsRoles (
+    directsroleid INTEGER NOT NULL,
+    role VARCHAR(250),
+    addinfo VARCHAR(1000),
+    PRIMARY KEY (directsroleid)
 );
 
 CREATE TABLE Produces (
-  personid INTEGER NOT NULL,
-  clipid INTEGER,
-  addinfo VARCHAR(1000),
-  roles VARCHAR(200),
-  PRIMARY KEY (personid, clipid),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
-  FOREIGN KEY (personid)
-    REFERENCES People (personid)
+    personid INTEGER NOT NULL,
+    clipid INTEGER,
+    producesroleid INTEGER,
+    PRIMARY KEY (personid, clipid, producesroleid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
+    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (producesroleid) REFERENCES ProducesRoles (producesroleid)
+);
+
+CREATE TABLE ProducesRoles (
+    producesroleid INTEGER NOT NULL,
+    role VARCHAR(250),
+    addinfo varchar(1000),
+    PRIMARY KEY (producesroleid)
 );
 
 CREATE TABLE Writes (
-  personid INTEGER NOT NULL,
-  clipid INTEGER,
-  addinfo VARCHAR(1000),
-  role VARCHAR(100),
-  worktype VARCHAR(100),
-  PRIMARY KEY (personid, clipid, role),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid),
-  FOREIGN KEY (personid)
-    REFERENCES People (personid)
+    personid INTEGER NOT NULL,
+    clipid INTEGER,
+    writesroleid INTEGER,
+    PRIMARY KEY (personid, clipid, writesroleid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
+    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (writesroleid) REFERENCES WritesRoles (writesroleid)
+);
+
+CREATE TABLE WritesRoles (
+    writesroleid INTEGER NOT NULL,
+    role VARCHAR(250),
+    worktype VARCHAR(250),
+    addinfo varchar(1000),
+    PRIMARY KEY (writesroleid)
 );
 
 CREATE TABLE Linked(

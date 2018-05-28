@@ -1,3 +1,4 @@
 .vscode*
 db2018imdb*
 .*.swp
+*.pkl
