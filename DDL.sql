@@ -88,8 +88,8 @@ CREATE TABLE PlaysIn (
     clipid INTEGER,
     playsinroleid INTEGER,
     PRIMARY KEY (personid, clipid, playsinroleid),
-    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
-    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+    FOREIGN KEY (personid) REFERENCES People (personid) ON DELETE CASCADE,
     FOREIGN KEY (playsinroleid) REFERENCES PlaysInRoles (playsinroleid)
 );
 
@@ -106,8 +106,8 @@ CREATE TABLE Directs (
     clipid INTEGER,
     directsroleid INTEGER,
     PRIMARY KEY (personid, clipid, directsroleid),
-    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
-    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+    FOREIGN KEY (personid) REFERENCES People (personid) ON DELETE CASCADE,
     FOREIGN KEY (directsroleid) REFERENCES DirectsRoles (directsroleid)
 );
 
@@ -123,8 +123,8 @@ CREATE TABLE Produces (
     clipid INTEGER,
     producesroleid INTEGER,
     PRIMARY KEY (personid, clipid, producesroleid),
-    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
-    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+    FOREIGN KEY (personid) REFERENCES People (personid) ON DELETE CASCADE,
     FOREIGN KEY (producesroleid) REFERENCES ProducesRoles (producesroleid)
 );
 
@@ -140,8 +140,8 @@ CREATE TABLE Writes (
     clipid INTEGER,
     writesroleid INTEGER,
     PRIMARY KEY (personid, clipid, writesroleid),
-    FOREIGN KEY (clipid) REFERENCES Clips (clipid),
-    FOREIGN KEY (personid) REFERENCES People (personid),
+    FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+    FOREIGN KEY (personid) REFERENCES People (personid) ON DELETE CASCADE,
     FOREIGN KEY (writesroleid) REFERENCES WritesRoles (writesroleid)
 );
 
@@ -170,12 +170,8 @@ CREATE TABLE HasLang(
   clipid INTEGER NOT NULL,
   langid INTEGER NOT NULL,
   PRIMARY KEY (clipid, langid),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid)
-    ON DELETE CASCADE,
-  FOREIGN KEY (langid)
-    REFERENCES Languages (langid)
-    ON DELETE CASCADE
+  FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+  FOREIGN KEY (langid) REFERENCES Languages (langid) ON DELETE CASCADE
 );
 
 CREATE TABLE Genres(
@@ -188,24 +184,16 @@ CREATE TABLE HasGenre(
   clipid INTEGER NOT NULL,
   genreid INTEGER,
   PRIMARY KEY (clipid, genreid),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid)
-    ON DELETE CASCADE,
-  FOREIGN KEY (genreid)
-    REFERENCES Genres (genreid)
-    ON DELETE CASCADE
+  FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+  FOREIGN KEY (genreid) REFERENCES Genres (genreid) ON DELETE CASCADE
 );
 
 CREATE TABLE Associated (
   clipid INTEGER NOT NULL,
   countryid INTEGER NOT NULL,
   PRIMARY KEY (clipid, countryid),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid)
-    ON DELETE CASCADE,
-  FOREIGN KEY (countryid)
-    REFERENCES Countries (countryid)
-    ON DELETE CASCADE
+  FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+  FOREIGN KEY (countryid) REFERENCES Countries (countryid) ON DELETE CASCADE
 );
 
 CREATE TABLE Released (
@@ -213,10 +201,6 @@ CREATE TABLE Released (
   countryid INTEGER,
   releasedate DATE,
   PRIMARY KEY (clipid, countryid),
-  FOREIGN KEY (clipid)
-    REFERENCES Clips (clipid)
-    ON DELETE CASCADE,
-  FOREIGN KEY (countryid)
-    REFERENCES Countries (countryid)
-    ON DELETE CASCADE
+  FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
+  FOREIGN KEY (countryid) REFERENCES Countries (countryid) ON DELETE CASCADE
 );
