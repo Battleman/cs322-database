@@ -83,22 +83,31 @@ CREATE TABLE Biographies(
     ON DELETE CASCADE
 );
 
-CREATE TABLE PlaysIn (
-    personid INTEGER NOT NULL,
-    clipid INTEGER,
-    playsinroleid INTEGER,
-    PRIMARY KEY (personid, clipid, playsinroleid),
-    FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
-    FOREIGN KEY (personid) REFERENCES People (personid) ON DELETE CASCADE,
-    FOREIGN KEY (playsinroleid) REFERENCES PlaysInRoles (playsinroleid)
-);
-
 CREATE TABLE PlaysInRoles (
     playsinroleid INTEGER NOT NULL,
     chars VARCHAR(250),
     orderscredit INTEGER,
     addinfo varchar(1000),
     PRIMARY KEY (playsinroleid)
+);
+
+CREATE TABLE PlaysIn (
+    personid INTEGER NOT NULL,
+    clipid INTEGER,
+    playsinroleid INTEGER,
+    PRIMARY KEY (personid, clipid, playsinroleid),
+    FOREIGN KEY (clipid) REFERENCES Clips(clipid) 
+    ON DELETE CASCADE,
+    FOREIGN KEY (personid) REFERENCES People(personid) 
+    ON DELETE CASCADE,
+    FOREIGN KEY (playsinroleid) REFERENCES PlaysInRoles(playsinroleid)
+);
+
+CREATE TABLE DirectsRoles (
+    directsroleid INTEGER NOT NULL,
+    role VARCHAR(250),
+    addinfo VARCHAR(1000),
+    PRIMARY KEY (directsroleid)
 );
 
 CREATE TABLE Directs (
@@ -111,11 +120,11 @@ CREATE TABLE Directs (
     FOREIGN KEY (directsroleid) REFERENCES DirectsRoles (directsroleid)
 );
 
-CREATE TABLE DirectsRoles (
-    directsroleid INTEGER NOT NULL,
+CREATE TABLE ProducesRoles (
+    producesroleid INTEGER NOT NULL AUTO_INCREMENT,
     role VARCHAR(250),
-    addinfo VARCHAR(1000),
-    PRIMARY KEY (directsroleid)
+    addinfo varchar(1000),
+    PRIMARY KEY (producesroleid)
 );
 
 CREATE TABLE Produces (
@@ -128,11 +137,12 @@ CREATE TABLE Produces (
     FOREIGN KEY (producesroleid) REFERENCES ProducesRoles (producesroleid)
 );
 
-CREATE TABLE ProducesRoles (
-    producesroleid INTEGER NOT NULL,
+CREATE TABLE WritesRoles (
+    writesroleid INTEGER NOT NULL,
     role VARCHAR(250),
+    worktype VARCHAR(250),
     addinfo varchar(1000),
-    PRIMARY KEY (producesroleid)
+    PRIMARY KEY (writesroleid)
 );
 
 CREATE TABLE Writes (
@@ -145,13 +155,7 @@ CREATE TABLE Writes (
     FOREIGN KEY (writesroleid) REFERENCES WritesRoles (writesroleid)
 );
 
-CREATE TABLE WritesRoles (
-    writesroleid INTEGER NOT NULL,
-    role VARCHAR(250),
-    worktype VARCHAR(250),
-    addinfo varchar(1000),
-    PRIMARY KEY (writesroleid)
-);
+
 
 CREATE TABLE Linked(
   clipto INTEGER,
@@ -203,4 +207,13 @@ CREATE TABLE Released (
   PRIMARY KEY (clipid, countryid),
   FOREIGN KEY (clipid) REFERENCES Clips (clipid) ON DELETE CASCADE,
   FOREIGN KEY (countryid) REFERENCES Countries (countryid) ON DELETE CASCADE
+);
+
+CREATE TABLE Running(
+  clipid INTEGER NOT NULL,
+  countryid INTEGER NOT NULL,
+  running VARCHAR(100),
+  PRIMARY KEY (clipid, countryid, running),
+  FOREIGN KEY (clipid) REFERENCES Clips(clipid) ON DELETE CASCADE,
+  FOREIGN KEY (countryid) REFERENCES Countries(countryid) ON DELETE CASCADE
 );

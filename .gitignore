@@ -2,3 +2,5 @@
 db2018imdb*
 .*.swp
 *.pkl
+*~
+.ipynb_checkpoints/*
