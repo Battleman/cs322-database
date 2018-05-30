@@ -347,8 +347,10 @@ def produces():
             open('db2018imdb/ORACLE_producesroles.csv', 'wb') as roleDstCSV:
         next(prodCSV)
         src = csv.reader(prodCSV, delimiter=',', quotechar='"')
-        dstProd = unicsv.writer(prodDstCSV, delimiter=',', quotechar='"')
-        dstRole = unicsv.writer(roleDstCSV, delimiter=',', quotechar='"')
+        dstProd = unicsv.writer(prodDstCSV, delimiter=',',
+                                quotechar='"', lineterminator="\n")
+        dstRole = unicsv.writer(roleDstCSV, delimiter=',',
+                                quotechar='"', lineterminator="\n")
         roleId = 1
         for name, clipsIds, roles, addinfos in src:
             clipsList = clipsIds[1:-1].split('|')
@@ -377,8 +379,10 @@ def directs():
 
         next(dirCSV)
         src = csv.reader(dirCSV, delimiter=',', quotechar='"')
-        dstDirec = unicsv.writer(directsCSV, delimiter=',', quotechar='"')
-        dstRole = unicsv.writer(roleDstCSV, delimiter=',', quotechar='"')
+        dstDirec = unicsv.writer(
+            directsCSV, delimiter=',', quotechar='"', lineterminator="\n")
+        dstRole = unicsv.writer(roleDstCSV, delimiter=',',
+                                quotechar='"', lineterminator="\n")
         roleId = 1
         for name, clipsIds, roles, addinfos in src:
             pid = namesToId[name]
@@ -388,7 +392,7 @@ def directs():
             addinfosList = addinfos[1:-1].split('|')
 
             numRoles = len(rolesList)
-            
+
             zippedRoles = zip(range(roleId, roleId+numRoles),
                               rolesList, addinfosList)
             zippedProduces = zip([pid]*numRoles, clipsList,
@@ -408,12 +412,14 @@ def plays():
         namesToId = pkl.load(f)
     with open('db2018imdb/actors.csv', 'r', newline='', encoding='utf-8') as playsCSV,\
             open('db2018imdb/ORACLE_playsin.csv', 'wb') as playsDstCSV,\
-            open('db2018imdb/ORACLE_playsinroles.csv','wb') as playroleDstCSV:
+            open('db2018imdb/ORACLE_playsinroles.csv', 'wb') as playroleDstCSV:
 
         next(playsCSV)
         src = csv.reader(playsCSV, delimiter=',', quotechar='"')
-        dstDirec = unicsv.writer(playsDstCSV, delimiter=',', quotechar='"')
-        dstRole = unicsv.writer(playroleDstCSV, delimiter=',', quotechar='"')
+        dstDirec = unicsv.writer(
+            playsDstCSV, delimiter=',', quotechar='"', lineterminator="\n")
+        dstRole = unicsv.writer(
+            playroleDstCSV, delimiter=',', quotechar='"', lineterminator="\n")
         roleId = 1
         for name, clipsIds, chars, orderCredits, addinfos in src:
             pid = namesToId[name]
@@ -431,7 +437,7 @@ def plays():
             roleId += numRoles
 
             for role in zippedRoles:
-                dstRole.writerow([role[0], role[1], role[2]])
+                dstRole.writerow([role[0], role[1], role[2], role[3]])
             for prod in zippedProduces:
                 dstDirec.writerow([prod[0], prod[1], prod[2]])
 
@@ -445,29 +451,30 @@ def writes():
 
         next(writesCSV)
         src = csv.reader(writesCSV, delimiter=',', quotechar='"')
-        dstWrites = unicsv.writer(writesDstCSV, delimiter=',', quotechar='"', lineterminator='\n')
-        dstRole = unicsv.writer(writesRoleCSV, delimiter=',', quotechar='"', lineterminator='\n')
+        dstWrites = unicsv.writer(
+            writesDstCSV, delimiter=',', quotechar='"', lineterminator='\n')
+        dstRole = unicsv.writer(
+            writesRoleCSV, delimiter=',', quotechar='"', lineterminator='\n')
         roleId = 1
 
         for name, clipsIds, worktype, roles, addinfos in src:
             pid = namesToId[name]
-            # print(name)
+
             clipsList = clipsIds[1:-1].split('|')
             rolesList = roles[1:-1].split('|')
             addinfosList = addinfos[1:-1].split('|')
             workTypeList = worktype[1:-1].split('|')
             numRoles = len(rolesList)
 
-            zippedWrites = zip([pid]*numRoles, clipsList, workTypeList,
+            zippedWrites = zip([pid]*numRoles, clipsList,
                                range(roleId, roleId+numRoles))
             zippedRoles = zip(range(roleId, roleId+numRoles),
-                              rolesList, addinfosList)
+                              rolesList, workTypeList, addinfosList)
             roleId += numRoles
-            # print(sum(1 for _ in zippedRoles))
             for writer in zippedWrites:
                 dstWrites.writerow([writer[0], writer[1], writer[2]])
             for role in zippedRoles:
-                dstRole.writerow([role[0], role[1], role[2]])
+                dstRole.writerow([role[0], role[1], role[2], role[3]])
 
 
 def main():
@@ -476,25 +483,24 @@ def main():
     # clips()
     # links()
     # countries()
-    # people()
+    people()
     # biographies()
-    
-    # write_time = time.time()
-    # writes()
-    # print("Time for writer: ", time.time()-write_time)
-    
-    # actors_time = time.time()
-    # plays()
-    # print("Time for actors: ", time.time()-actors_time)
-    
-    # prod_time = time.time()
-    # produces()
-    # print("Time for produces: ", time.time()-prod_time)
-    
+
+    write_time = time.time()
+    writes()
+    print("Time for writer: ", time.time()-write_time)
+
+    actors_time = time.time()
+    plays()
+    print("Time for actors: ", time.time()-actors_time)
+
+    prod_time = time.time()
+    produces()
+    print("Time for produces: ", time.time()-prod_time)
+
     directs_time = time.time()
     directs()
     print("Time for directs: ", time.time()-directs_time)
-
 
 
 if __name__ == "__main__":
