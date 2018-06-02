@@ -5,6 +5,8 @@
 </head>
 <body>
     <div>
+    <button onclick="window.location.href='index.php'">Go back to home page</button>
+    <br>
         <?php
         $servername = "localhost";
         $username = "olivier";
@@ -27,18 +29,18 @@
             $humanCols = array("Clip Title", "Running");
         }
         if (isset($_POST['predef2'])) {
-            $query = "SELECT COUNT(*), C.country
+            $query = "SELECT COUNT(*) as count, C.country
             FROM Released R, Countries C
             WHERE R.countryid = C.countryid
                AND YEAR(R.releasedate) = 2001
             GROUP BY C.countryid
             ORDER BY COUNT(*) DESC;";
 
-            $columns = array("COUNT(*)", "country");
+            $columns = array("count", "country");
             $humanCols = array("Total", "Country");
         }
         if (isset($_POST['predef3'])) {
-            $query = 'SELECT COUNT(*), G.genre
+            $query = 'SELECT COUNT(*) as count, G.genre
             FROM Genres G, HasGenre H, Released R, Countries C
             WHERE C.countryid=R.countryid
                AND R.clipid = H.clipid
@@ -47,7 +49,7 @@
                AND YEAR(R.releasedate) > 2013
             GROUP BY G.genreid;';
 
-            $columns = array("COUNT(*)", "genre");
+            $columns = array("count", "genre");
             $humanCols = array("Total", "Genre");
         }
         if (isset($_POST['predef4'])) {
@@ -61,11 +63,11 @@
             $humanCols = array("Name");
         }
         if (isset($_POST['predef5'])) {
-            $query = 'SELECT COUNT(*)
+            $query = 'SELECT COUNT(*) as count
             FROM Directs D
             GROUP BY D.personid
             ORDER BY COUNT(*) DESC LIMIT 1;';
-            $columns = array("COUNT(*)");
+            $columns = array("count");
             $humanCols = array("Total");
         }
         if (isset($_POST['predef6'])) {
@@ -78,7 +80,7 @@
                 OR P.personid=A.personid AND P.clipid=A.clipid AND M.personid = A.personid
                 OR W.personid=P.personid AND W.clipid=P.clipid AND M.personid = W.personid;';
 
-            $columns = array("Fullname");
+            $columns = array("fullname");
             $humanCols = array("Name");
         }
         if (isset($_POST['predef7'])) {
@@ -92,26 +94,26 @@
             $humanCols = array("Language");
         }
         if (isset($_POST['predef8'])) {
-            $query = 'SELECT M.fullname, B.realname, B.nickname
+            $type = $_POST['type'];
+            $query = "SELECT M.fullname, B.realname, B.nickname
             FROM People M, Bioinfos B, PlaysIn A, Clips C
-            WHERE C.cliptype = ‘user-specified’
-                AND A.clipid = C.clipid
+            WHERE C.cliptype = '$type' AND A.clipid = C.clipid
                 AND A.personid = B.personid
                 AND A.personid = M.personid
             GROUP BY A.personid
-            ORDER BY COUNT(A.clipid) DESC LIMIT 1
-            ';
-            $columns = array("language");
-            $humanCols = array("Language");
+            ORDER BY COUNT(A.clipid) DESC LIMIT 1;";
+            $columns = array("fullname", "realname", "nickname");
+            $humanCols = array("Name", "Real name", "Nickname");
         }
        
         $result = $conn->query($query);
         if ($result === false) {
-            die("Result failed, check your query");
+            die("Result failed, check your query : " . $conn->error);
         }
         if ($result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {
+                // print_r($row);
                 for ($x = 0; $x < count($columns); $x++) {
                     echo '<b>' . $humanCols[$x] . "</b>: " . $row[$columns[$x]];
                     if ($x < count($columns) - 1) {

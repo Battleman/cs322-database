@@ -33,7 +33,7 @@ function openVertTab(evt, tabName) {
     tablinks = document.getElementsByClassName("vert_tablinks");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
-        
+
     }
 
     // Show the current tab, and add an "active" class to the link that opened the tab
@@ -42,30 +42,37 @@ function openVertTab(evt, tabName) {
 }
 
 
-function roleSelector(evt, val, num) {
+function roleSelector(val, num) {
     var i, roleContent;
-
-    roleContent = document.getElementsByClassName('insertPerson_role'+num);
+    // alert(val);
+    roleContent = document.getElementsByClassName('insertPerson_role' + num);
     for (i = 0; i < roleContent.length; i++) {
+        // alert(roleContent);
         roleContent[i].style.display = "none";
     }
 
     document.getElementById(val).style.display = "block";
 }
 
-function addFields(){
-    // Container <div> where dynamic content will be placed
-    var container = document.getElementById("insertPerson");
-    // Clear previous contents of the container
-    for (i=0;i<number;i++){
-        // Append a node with a random text
-        container.appendChild(document.createTextNode("Member " + (i+1)));
-        // Create an <input> element, set its type and name attributes
-        var input = document.createElement("input");
-        input.type = "text";
-        input.name = "member" + i;
-        container.appendChild(input);
-        // Append a line break 
-        container.appendChild(document.createElement("br"));
+function bioSelector(toHide, target) {
+    var bioContent, i, j, current, children;
+    bioContent = document.getElementsByClassName(toHide);
+    for (i = 0; i < bioContent.length; i++) {
+        bioContent[i].style.display = 'none';
+        // children = bioContent[i].getElementsByTagName('input');
+        // for (j = 0; j < children.length; j++) {
+        //     children[j].removeAttribute('required');
+        // }
     }
+
+    current = document.getElementById('bioinfo_' + target);
+    current.style.display = 'block';
+    // children = current.getElementsByTagName('input');
+    //     for (j = 0; j < children.length; j++) {
+    //         children[j].required = true;
+    //     }
+}
+
+function setDefaultBio(){
+    document.getElementById("form_bioSelect").selectedIndex = 0;
 }

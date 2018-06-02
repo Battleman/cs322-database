@@ -29,10 +29,10 @@
     <div class="container">
         <h1>IMDB Evolved - The new interface</h1>
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'Welcome')" id="defaultOpen">Welcome</button>
+            <button class="tablinks" onclick="openTab(event, 'Welcome')" >Welcome</button>
             <button class="tablinks" onclick="openTab(event, 'Search')">Search</button>
             <button class="tablinks" onclick="openTab(event, 'Predefined')">Predefined</button>
-            <button class="tablinks" onclick="openTab(event, 'I/D')">Insert/Delete</button>
+            <button class="tablinks" onclick="openTab(event, 'I/D')" id="defaultOpen">Insert/Delete</button>
             <button class="tablinks" onclick="openTab(event, 'Help')">HELP !</button>
             <button class="tablinks" onclick="openTab(event, 'Credits')">Credits</button>
         </div>
@@ -45,15 +45,21 @@
                 <fieldset>
                     <legend>Search in the database</legend>
                     <input type="text" name="search">
+                    <select name="domain">
+                        <option selected value>All</option>
+                        <option value="name">Names</option>
+                        <option value="title">Titles</option>
+                        <option value="tv">TV Episodes</option>
+                    </select>
                     <br>
-                    <input type="submit" value="Submit">
+                    <input type="submit" value="Search">
                     <input type="reset">
                 </fieldset>
             </form>
         </div>
         <div id="Predefined" , class="tabcontent">
             <div class="vert_tab">
-                <button class="vert_tablinks" onclick="openVertTab(event, 'predefined1')" id='defaulInsert'>Q 1.a</button>
+                <button class="vert_tablinks" onclick="openVertTab(event, 'predefined1')" id='defaultInsert'>Q 1.a</button>
                 <button class="vert_tablinks" onclick="openVertTab(event, 'predefined2')">Q 1.b</button>
                 <button class="vert_tablinks" onclick="openVertTab(event, 'predefined3')">Q 1.c</button>
                 <button class="vert_tablinks" onclick="openVertTab(event, 'predefined4')">Q 1.d</button>
@@ -106,8 +112,14 @@
                     </form>
                 </div>
                 <div id="predefined8" class="vert_tabcontent">
-                    Find the full name of the actor who has performed in the highest number of movies.
+                    Find the full name of the actor who has performed in the highest number of movies of a certain type (select below).
                     <form action="predefined.php" , method="POST">
+                    <select name='type' required>
+                            <option value="TV">TV movie</option>
+                            <option value="V">Video movie</option>
+                            <option value="VG">Video game movie</option>
+                            <option value="SE">Serie</option>
+                        </select>                        
                         <input type="submit" value="View" name="predef8">
                     </form>
                 </div>
@@ -117,7 +129,7 @@
             <div class="vert_tab">
                 <button class="vert_tablinks" onclick="openVertTab(event, 'insertClip')" id='defaulInsert'>Clips</button>
                 <button class="vert_tablinks" onclick="openVertTab(event, 'insertPerson')">People</button>
-                <button class="vert_tablinks" onclick="openVertTab(event, 'insertBiography')">Biographies</button>
+                <button class="vert_tablinks" onclick="openVertTab(event, 'insertBiography'); setDefaultBio()">Biographical infos</button>
                 <button class="vert_tablinks" onclick="openVertTab(event, 'insertRelation')">Relation</button>
             </div>
             <div>
@@ -178,23 +190,23 @@
                         Person Name<span style="color:red">*</span>:
                         <input type="text" name="input_insertPersonName" required>
                         <br> 
-                        Film Name<span style="color:red">*</span>:
+                        Title<span style="color:red">*</span>:
                         <input type="text" name="input_insertPersonFilmName" required>
                         <select name='clipType'>
-                            <option selected value> -- select an option -- </option>
+                            <option selected value> -- select an type -- </option>
                             <option value="TV">TV movie</option>
                             <option value="V">Video movie</option>
                             <option value="VG">Video game movie</option>
                             <option value="SE">Serie</option>
                         </select>
-                        <input type="number" min="1700" placeholder="Year" name="filmYear">
+                        <input type="number" min="1700" step='1' placeholder="Year" name="filmYear">
                         <br>
                         <input type="button" value="Add role" onclick="addFields">
                         <br>
-                        <div id=role1>
+                        <div id="role1">
                             Role
                             <span style="color:red">*</span>:
-                            <select onchange="roleSelector(event, this.value, 1);", name="roleSelect">
+                            <select onchange="roleSelector(this.value, 1);" name="roleSelect" id="form_roleSelect">
                                 <option selected value>--Select an a role--</option>
                                 <option value="producer">Producer</option>
                                 <option value="writer">Writer</option>
@@ -208,16 +220,18 @@
                             <div class="insertPerson_role1" id="actor" style="display:none">
                                 
                                 <input type="text" placeholder="Character played" name="input_insertPersonCharacter_Actor">
-                                <input type="number" min=1 placeholder="Order in credits" name="input_insertPersonOrderCredits_Actor">
+                                <input type="number" min='1' step='1' placeholder="Order in credits" name="input_insertPersonOrderCredits_Actor">
                                 <input type="text" placeholder="Additional information" name="input_insertPersonAddinfo_Actor">
                                 <br>
                             </div>
                             <div class="insertPerson_role1" id="director" style="display:none">
-                                <h3>This is the director tab</h3>
+                                <input type="text" placeholder="Role" name="input_insertPersonRole_Director">
+                                <input type="text" placeholder="Additional information" name="input_insertPersonAddinfo_Director">
+                                <br>
                             </div>
                             <div class="insertPerson_role1" id="writer" style="display:none">
-                            <input type="text" placeholder="Character played" name="input_insertPersonRole_Writer">
-                                <input type="number" min=1 placeholder="Order in credits" name="input_insertPersonWorkType_Writer">
+                                <input type="text" placeholder="Role" name="input_insertPersonRole_Writer">
+                                <input type="text" placeholder="Work Type" name="input_insertPersonWorkType_Writer">
                                 <input type="text" placeholder="Additional information" name="input_insertPersonAddinfo_Writer">
                                 <br>
                             </div>
@@ -229,14 +243,37 @@
                     </form>
                 </div>
                 <div id="insertBiography" class="vert_tabcontent">
-                    <form action="insert.php" method="POST">
-                        Person Name:
+                    <form action="insertBiography.php" method="POST">
+                        <input type="text" name="insertBio_name" placeholder="Name">
                         <br>
-                        <input type="text" name="input_insertPersonNameBio">
-                        <br> Biography:
-                        <br>
-                        <input type="text" name="input_Biography">
-                        <br>
+                        <select onchange="bioSelector('bioInfo', this.value);" name="bioSelect" id="form_bioSelect">
+                                <option selected value>--Information type--</option>
+                                <option value="biography">Biography</option>
+                                <option value="salary">Salary</option>
+                                <option value="birthDeath">Birth/Death</option>
+                                <option value="whereNow">Current location</option>
+
+                                <!-- <option value="actor">Actor</option>
+                                <option value="director">Director</option> -->
+                            </select>
+                        <div class="bioInfo" id="bioinfo_biography" style='display:none'>
+                            <input type="text" placeholder="Biographer" name="input_Biographer">
+                            <br>
+                            <textarea placeholder="Biography" name="input_Biography"></textarea>
+                        </div>
+                        <div class='bioInfo' id="bioinfo_salary" style="display:none">
+                            <input type='text' placeholder="Film" name='salaryFilm'>
+                            <input type="number" min="1700" step='1' name='salarYear'>
+                            <input type="number" step='0.01' placeholder="Salary ($)"name='salarySalary'>
+                        </div>
+                        <div class='bioInfo' id="bioinfo_birthDeath" style="display:none">
+                            <input type='text' placeholder="Birth date and place" name='birth'>
+                            <input type='text' placeholder="Death date, place and cause" name='death'>
+                        </div>
+                        <div class='bioInfo' id="bioinfo_whereNow" style="display:none">
+                            <input type='text' placeholder='Where are they now ?' name='whereNow'>
+                            <input type='text' placeholder="Time" name='whereTime'> 
+                        </div>
                         <input type="submit" value="Insert" name='insert'>
                         <input type="submit" value="Delete" name='delete'>
                     </form>
@@ -244,12 +281,12 @@
             </div>
         </div>
         <div id='Help' class="tabcontent">
-            <h2>Like, dude ? You seriously need some help for an interface as simple as that ?</h2>
+            <h2>Hey, dude ? You seriously need some help for an interface as simple as that ?</h2>
             <small>Get some help. Like, medically...</small>
         </div>
         <div id="Credits" class="tabcontent">
             <h3>Credits to the best team ever !</h3>
-            Like, yeah, our team work is awesome. They do the dirty work, and I have fun with this website.
+            Our team work is awesome. They do the dirty work, and I have fun with this website.
         </div>
     </div>
 
@@ -259,6 +296,7 @@
     <script>
         //open the welcome tab
         document.getElementById("defaultOpen").click();
+        document.getElementById("form_roleSelect").selectedIndex = 0;
     </script>
 </body>
 

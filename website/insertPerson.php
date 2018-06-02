@@ -7,12 +7,13 @@
     <?php
 
     require_once '/var/webconfig/dbConfig.php';
+    require_once 'phpSnippets.php';
     $conn = new mysqli($servername, $username, $password, $dbname);
     
     ###############################
     #QUERY CLIPID
     ###############################
-    $findFilmID = "SELECT clipid FROM Clips WHERE cliptitle  LIKE '" . $_POST['input_insertPersonFilmName'] . "' ";
+    $findFilmID = "SELECT clipid, clipyear, cliptitle, cliptype FROM Clips WHERE cliptitle  LIKE '%" . $_POST['input_insertPersonFilmName'] . "%' ";
     if (!empty($_POST['filmYear'])) {
         $findFilmID = $findFilmID . "AND clipyear = " . $_POST['filmYear'];
     }
@@ -26,14 +27,15 @@
         die("Bad findFilm query");
     }
     if ($res->num_rows == 0) {
-        die("The film you entered wasn't found. Please check.");
+        die("<h3>The film you entered wasn't found.</h3>Please check.");
     }
     if ($res->num_rows > 1) {
-        echo ("Your query is ambiguous, more than one result was found. Did you mean :<br>");
+        echo ("Your title you entered is ambiguous, more than one result was found. Did you mean :<br>");
         while ($row = $res->fetch_assoc()) {
             $text = $row['cliptitle'] . " (" . $row['clipyear'] . ")" . (($row['cliptype'] == 'NULL' or $row['cliptype'] == "") ? "" : " (" . $row['cliptype'] . ")") . "<br>";
-            echo (preg_replace($cliptTypePattern, $clipTypeReplacement, $text));
+            echo (preg_replace($clipTypePattern, $clipTypeReplacement, $text));
         }
+        echo '<button onclick="window.location.href=\'index.php\'">Go back to home page</button>';
         die();
     }
     $clipid = $res->fetch_assoc()['clipid'];
@@ -52,12 +54,12 @@
             die("Bad searchPerson query");
         }
         if ($res->num_rows == 0) {
-            die("The person you entered wasn't found. Please check.");
+            die("The name you entered wasn't found. Please check.");
         }
         if ($res->num_rows > 1) {
-            echo ("The name of the person you entered is ambiguous, more than one result was found. Did you mean :<br>");
+            echo ("<h3>The name you entered is ambiguous</h3>More than one result was found. Did you mean :<br>");
             while ($row = $res->fetch_assoc()) {
-                echo($row['fullname']."<br>\n");
+                echo ($row['fullname'] . "<br>\n");
             }
             die();
         }
@@ -65,47 +67,63 @@
     }
 
     #########################################
-    #INSERT
+    #DETERMINE TABLE, COLUMN NAMES AND VALUES
     ##########################################
-
-    
     switch ($_POST['roleSelect']) {
         case "producer":
             $table = "Produces";
             $colNames = "personid, clipid, producesroleid";
-            $rolesColNames = "role, addinfo";
-            $roleColVals = $_POST['input_insertPersonExactRole_Producer'] . ',' . $_POST['input_insertPersonAddinfo_Producer'];
-            $colVals = "";
+            $rolesColNames = "role, addinfo"; /*producesroleid deducted*/
+            $roleColVals = "'" .
+                $_POST['input_insertPersonExactRole_Producer'] . "','" . 
+                $_POST['input_insertPersonAddinfo_Producer'] . "'";
             break;
         case "writer":
             $table = "Writes";
+            $colNames = "personid, clipid, writesroleid";
             $rolesColNames = "role, worktype, addinfo";
             $roleColVals = "'" .
-                $_POST['input_insertPersonRole_Writer'] . "'," .
-                $_POST['input_insertPersonWorkType_Writer'] . "'," .
+                $_POST['input_insertPersonRole_Writer'] . "','" .
+                $_POST['input_insertPersonWorkType_Writer'] . "','" .
                 $_POST['input_insertPersonAddinfo_Writer'] . "'";
-
-            $colNames = "personid, clipid, writesroleid";
-            $colVals = "";
             break;
         case "actor":
             $table = "PlaysIn";
             $colNames = "personid, clipid, playsinroleid";
             $rolesColNames = "chars, ordercredits, addinfo";
-            $roleColVals = $_POST['input_insertPersonCharacter_Actor'] . ',' .
-                $_POST['input_insertPersonOrderCredits_Actor'] . ',' .
-                $_POST['input_insertPersonAddinfo_Actor'];
-            $ColVals = "";
+            $roleColVals = "'" .
+                $_POST['input_insertPersonCharacter_Actor'] . "','" .
+                $_POST['input_insertPersonOrderCredits_Actor'] . "','" .
+                $_POST['input_insertPersonAddinfo_Actor'] . "'";
             break;
         case "director":
             $table = "Directs";
             $colNames = "personid, clipid, directsroleid";
             $rolesColNames = "role, addinfo";
-            $colVals = $_POST['input_insertPersonExactRole_Producer'] . ',' . $_POST['input_insertPersonAddinfo_Producer'];
+            $rolesColVals = "'" .
+                $_POST['input_insertPersonExactRole_Producer'] . "','" .
+                $_POST['input_insertPersonAddinfo_Producer'] . "'";
+            
             break;
     }
-    $tableRoles = $table . "Roles";
-    $insertQuery = "INSERT INTO ";
+    $roleTable = $table . "Roles";
+    $insertQueryRole = "INSERT INTO $roleTable ($rolesColNames) VALUES ($roleColVals);";
+    
+    if(!$conn->query($insertQueryRole)){
+        if(isset($_POST['insertNew'])){ //revert
+            $delQuery = "DELETE FROM People WHERE Personid = $personid;";
+            $conn->query($delQuery);
+        }
+        die("Insert ExactRole failed:" . $conn->error);
+    }
+    $roleid = getID($conn);
+
+    $colVals = "$personid, $clipid, $roleid";
+    $insertQuery = "INSERT INTO $table ($colNames) VALUES ($colVals)";
+    if($conn->query($insertQuery) == false){
+        //TODO revert
+        die("Insert Role failed:" . $conn->error);
+    }   
     $conn->close();
     ?>
 </body>
